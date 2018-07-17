@@ -55,21 +55,24 @@ createBarChart() {
 		.data(this.props.data)
 		.enter()
 		.append('rect')
+		.attr("class","bar")
+		.on("mouseover", this.props.onHover)
 
 	select(node)
-		.selectAll("rect")
+		.selectAll("rect.bar")
 		.data(this.props.data)
 		.exit()
 		.remove()
 
 	select(node)	
-		.selectAll("rect")
+		.selectAll("rect.bar")
 		.data(this.props.data)
 		.attr("x", (d,i) => i * barWidth)
 		.attr("y", d => (this.props.size[1] - yScale(sum(d.data))))
 		.attr("height", d => yScale(sum(d.data)))
 		.attr("width", barWidth)
-		.style('fill',(d,i) => this.props.colorScale(d.launchday))
+		.style('fill',(d,i) => this.props.hoverElement === d.id ? 
+			"#FCBC34" : this.props.colorScale(i))
 		.style('stroke','black')
 		.style('stroke-opacity', 0.25)
 }

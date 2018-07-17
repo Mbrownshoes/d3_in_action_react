@@ -27,3 +27,12 @@
   to { transform: rotate(360deg); }
 }
 
+rect.selection {
+  fill: #FE9922;
+  opacity: 0.5;
+}
+
+rect.handle {
+  fill: #FE9922;
+  opacity: 0.25;
+}

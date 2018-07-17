@@ -3,6 +3,7 @@ import './App.css';
 import BarChart from './BarChart'
 import WorldMap from './WorldMap'
 import worlddata from './world'
+import Brush from './Brush'
 import StreamGraph from './StreamGraph'
 import { range, sum } from 'd3-array'
 import { scaleThreshold } from 'd3-scale'
@@ -17,7 +18,7 @@ appdata
     const offset = Math.random()
     d.launchday = i
     d.data = range(30).map((p,q) => q < i ? 0 : Math.random() * 2 + offset)
-      console.log(d.launchday)
+      // console.log(d.launchday)
   })
 
 class App extends Component {
@@ -25,7 +26,10 @@ class App extends Component {
   constructor(props){
     super(props)
     this.onResize = this.onResize.bind(this)
-    this.state = { screenWidth: 1000, screenHeight: 500 }
+    this.onHover = this.onHover.bind(this)
+    this.onBrush = this.onBrush.bind(this)
+    this.state = { screenWidth: 1000, screenHeight: 500 , hover: 'none', brushExtent:[0, 40] }
+
   }
 
   ComponentDidMount() {
@@ -38,8 +42,21 @@ class App extends Component {
       screenHeight: window.innerHeight - 70 })
   }
 
+  onHover(d) {
+    this.setState({ hover: d.id })
+  }
+
+  onBrush(d){
+    this.setState({ brushExtent: d })
+  }
+
   render() {
-const colorScale = scaleThreshold().domain([5,10,20,30,50]).range(["#75739F", "#5EAFC6", "#41A368", "#93C464"])
+    const filteredAppdata = appdata.filter((d,i) => 
+      d.launchday >= this.state.brushExtent[0] &&
+      d.launchday <= this.state.brushExtent[1])
+
+    console.log(filteredAppdata)
+    const colorScale = scaleThreshold().domain([5,10,20,30,50]).range(["#75739F", "#5EAFC6", "#41A368", "#93C464"])
 
   return (
     <div className="App">
@@ -47,9 +64,11 @@ const colorScale = scaleThreshold().domain([5,10,20,30,50]).range(["#75739F", "#
     <h2>d3ia dashboard</h2>
     </div>
     <div>
-    <StreamGraph colorScale={colorScale} data={appdata} size={[this.state.screenWidth,this.state.screenHeight /2]} />
-    <WorldMap colorScale={colorScale} data={appdata} size={[this.state.screenWidth / 2,this.state.screenHeight /2]} />
-    <BarChart colorScale={colorScale} data={appdata} size={[this.state.screenWidth / 2,this.state.screenHeight /2]} />
+    <StreamGraph hoverElement={this.state.hover} onHover={this.onHover} colorScale={colorScale} data={filteredAppdata} size={[this.state.screenWidth,this.state.screenHeight /2]} />
+    <Brush changeBrush={this.onBrush} size={[this.state.screenWidth, 50]} />“
+    <WorldMap hoverElement={this.state.hover} onHover={this.onHover} colorScale={colorScale} data={filteredAppdata} size={[this.state.screenWidth / 2,this.state.screenHeight /2]} />
+    <BarChart hoverElement={this.state.hover} onHover={this.onHover} colorScale={colorScale} data={filteredAppdata} size={[this.state.screenWidth / 2,this.state.screenHeight /2]} />
+    <Brush size={[this.state.screenWidth, 50]} />
 
     </div>
     </div>
