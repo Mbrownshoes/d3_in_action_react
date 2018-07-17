@@ -3,6 +3,9 @@ import "./App.css"
 import { scaleLinear } from 'd3-scale'
 import { max, sum } from 'd3-array'
 import { select } from 'd3-selection'
+import { legendColor } from 'd3-svg-legend'
+import { transition } from 'd3-transition'
+
 
 class BarChart extends Component {
 	constructor(props){
@@ -23,6 +26,26 @@ createBarChart() {
 	const dataMax = max(this.props.data.map(d => sum(d.data)))
 	// console.log(dataMax)
 	const barWidth = this.props.size[0] / this.props.data.length
+
+	
+
+
+    const legend = legendColor()
+      .scale(this.props.colorScale)
+      .labels(["Wave 1", "Wave 2", "Wave 3", "Wave 4"])
+
+    select(node)
+      .selectAll("g.legend")
+      .data([0])
+      .enter()
+      .append("g")
+        .attr("class", "legend")
+        .call(legend)
+
+    select(node)
+      .select("g.legend")
+        .attr("transform", "translate(" + (this.props.size[0] - 100) + ", 20)")
+
 	const yScale = scaleLinear()
 		.domain([0, dataMax])
 		.range([0, this.props.size[1]])

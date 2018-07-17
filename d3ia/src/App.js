@@ -47,9 +47,9 @@ const colorScale = scaleThreshold().domain([5,10,20,30,50]).range(["#75739F", "#
     <h2>d3ia dashboard</h2>
     </div>
     <div>
-    <StreamGraph colorScale={colorScale} data={appdata} size={[1000,250]} />
-    <WorldMap colorScale={colorScale} data={appdata} size={[500,400]} />
-    <BarChart colorScale={colorScale} data={appdata} size={[500, 400]} />
+    <StreamGraph colorScale={colorScale} data={appdata} size={[this.state.screenWidth,this.state.screenHeight /2]} />
+    <WorldMap colorScale={colorScale} data={appdata} size={[this.state.screenWidth / 2,this.state.screenHeight /2]} />
+    <BarChart colorScale={colorScale} data={appdata} size={[this.state.screenWidth / 2,this.state.screenHeight /2]} />
 
     </div>
     </div>
